@@ -55,7 +55,7 @@ export const ScrollyOverlay: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-20 flex flex-col justify-between px-6 md:px-12 py-24 max-w-7xl mx-auto w-full">
+    <div className="fixed inset-0 pointer-events-none z-20 flex flex-col justify-between px-4 sm:px-8 md:px-12 py-20 sm:py-24 max-w-7xl mx-auto w-full">
       
       {/* 1. Left-Edge Vertical Chapter Progress Spine HUD */}
       <div className="hidden lg:flex fixed left-8 top-1/2 -translate-y-1/2 flex-col items-center gap-6 pointer-events-auto z-30 font-mono text-[10px]">
@@ -114,27 +114,27 @@ export const ScrollyOverlay: React.FC = () => {
       </div>
 
       {/* 2. Top Chapter Indicator Navigation Bar */}
-      <div className="flex items-center justify-between pt-2 pointer-events-auto w-full">
-        <div className="flex items-center gap-2">
+      <div className="flex items-center justify-between pt-1 sm:pt-2 pointer-events-auto w-full">
+        <div className="flex items-center gap-1.5 sm:gap-2">
           {chapters.map((item, idx) => (
             <div
               key={item.label}
               className={`h-1 rounded-full transition-all duration-300 ${
                 currentChapter === idx
-                  ? 'w-10 bg-[#FF6B35] shadow-[0_0_10px_#FF6B35]'
-                  : 'w-3 bg-white/20'
+                  ? 'w-6 sm:w-10 bg-[#FF6B35] shadow-[0_0_10px_#FF6B35]'
+                  : 'w-2 sm:w-3 bg-white/20'
               }`}
             />
           ))}
         </div>
 
-        <span className="font-mono text-xs text-[#FF6B35] font-bold">
+        <span className="font-mono text-[10px] sm:text-xs text-[#FF6B35] font-bold">
           CH 0{currentChapter + 1} // {chapters[currentChapter].label}
         </span>
       </div>
 
       {/* 3. Main Dynamic Chapter Stage */}
-      <div className="flex-1 flex items-center w-full my-auto">
+      <div className="flex-1 flex items-center w-full my-auto overflow-y-auto max-h-[78vh] py-2">
         <AnimatePresence mode="wait">
           
           {/* CHAPTER 0: HERO */}
@@ -145,42 +145,42 @@ export const ScrollyOverlay: React.FC = () => {
               animate={{ opacity: 1, scale: 1, filter: 'blur(0px)', y: 0 }}
               exit={{ opacity: 0, scale: 0.5, filter: 'blur(40px)', y: -20 }}
               transition={getChapterTransition(0)}
-              className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch w-full"
+              className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-stretch w-full"
             >
-              <div className="lg:col-span-8 flex flex-col justify-between gap-8 hero-glass p-8 md:p-12 pointer-events-auto">
-                <div className="flex flex-col gap-6">
+              <div className="lg:col-span-8 flex flex-col justify-between gap-6 sm:gap-8 hero-glass p-6 sm:p-10 md:p-12 pointer-events-auto">
+                <div className="flex flex-col gap-4 sm:gap-6">
                   <div
-                    className="flex items-center gap-2 px-3.5 py-1.5 rounded-full border w-fit"
+                    className="flex items-center gap-2 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full border w-fit"
                     style={{
                       backgroundColor: 'rgba(255, 107, 53, 0.08)',
                       borderColor: 'rgba(255, 107, 53, 0.25)',
                     }}
                   >
                     <span className="w-1.5 h-1.5 rounded-full bg-[#FF6B35] animate-ping" />
-                    <span className="font-mono text-[11px] uppercase tracking-widest text-[#FF6B35] font-bold">
+                    <span className="font-mono text-[10px] sm:text-[11px] uppercase tracking-widest text-[#FF6B35] font-bold">
                       NEAR-ULTRASONIC · 18–24 kHz
                     </span>
                   </div>
 
-                  <h1 className="font-display font-black text-4xl sm:text-6xl lg:text-7xl tracking-tight text-white leading-[1.04]">
+                  <h1 className="font-display font-black text-3xl sm:text-5xl lg:text-7xl tracking-tight text-white leading-[1.06]">
                     DATA, CARRIED <br />
                     <span style={{ color: THEME.accent }}>ON SOUND.</span>
                   </h1>
 
-                  <p className="text-base md:text-lg max-w-2xl font-normal leading-relaxed text-slate-300">
+                  <p className="text-sm sm:text-base md:text-lg max-w-2xl font-normal leading-relaxed text-slate-300">
                     WAVELINK transforms standard audio speakers and microphones into air-gapped data transceivers via near-ultrasonic acoustic waves with zero RF emissions.
                   </p>
                 </div>
 
                 <div className="flex items-center gap-4">
-                  <span className="text-xs font-mono text-slate-400">
-                    Scroll down to explore the 3D hardware pipeline
+                  <span className="text-[11px] sm:text-xs font-mono text-slate-400">
+                    Scroll down to explore the 3D hardware pipeline ↓
                   </span>
                 </div>
               </div>
 
-              <div className="lg:col-span-4 flex flex-col gap-6 justify-between items-stretch pointer-events-auto">
-                <TelemetryPanel className="flex-1 flex flex-col justify-between gap-4">
+              <div className="lg:col-span-4 flex flex-col gap-4 sm:gap-6 justify-between items-stretch pointer-events-auto">
+                <TelemetryPanel className="flex-1 flex flex-col justify-between gap-4 p-5 sm:p-6">
                   <div className="flex items-center justify-between text-xs font-mono text-slate-400 border-b border-white/10 pb-3">
                     <div className="flex items-center gap-2">
                       <WaveformIcon size={18} color={THEME.accent} />
@@ -204,35 +204,35 @@ export const ScrollyOverlay: React.FC = () => {
               transition={getChapterTransition(1)}
               className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch w-full"
             >
-              <div className="lg:col-span-7 flex flex-col justify-between gap-8 telemetry-glass p-8 md:p-12 pointer-events-auto">
-                <div className="flex flex-col gap-6">
+              <div className="lg:col-span-7 flex flex-col justify-between gap-6 sm:gap-8 telemetry-glass p-6 sm:p-10 pointer-events-auto">
+                <div className="flex flex-col gap-4 sm:gap-6">
                   <span
-                    className="text-xs font-mono tracking-widest uppercase font-bold px-3.5 py-1 rounded-md border w-fit"
+                    className="text-[11px] sm:text-xs font-mono tracking-widest uppercase font-bold px-3 py-1 rounded-md border w-fit"
                     style={{
                       backgroundColor: 'rgba(255, 107, 53, 0.08)',
                       borderColor: 'rgba(255, 107, 53, 0.25)',
                       color: THEME.accent,
                     }}
                   >
-                    PIPELINE 01 // EMIT (CLOSE MACRO INSPECTION)
+                    PIPELINE 01 // EMIT (MACRO INSPECTION)
                   </span>
 
-                  <h2 className="font-display font-black text-3xl sm:text-5xl text-white leading-tight">
+                  <h2 className="font-display font-black text-2xl sm:text-4xl text-white leading-tight">
                     Piezoelectric Acoustic Conversion
                   </h2>
 
-                  <p className="text-base leading-relaxed text-slate-300 font-normal">
+                  <p className="text-sm sm:text-base leading-relaxed text-slate-300 font-normal">
                     Digital bit streams drive micro-voltage pulses into a lead zirconate titanate (PZT) ceramic element, generating continuous near-ultrasonic pressure waves.
                   </p>
                 </div>
 
-                <div className="flex flex-col gap-4 bg-black/40 p-6 rounded-2xl border border-white/10">
+                <div className="flex flex-col gap-3 sm:gap-4 bg-black/40 p-4 sm:p-6 rounded-2xl border border-white/10">
                   <div className="flex justify-between items-center text-xs font-mono text-slate-400">
                     <div className="flex items-center gap-2">
-                      <SlidersIcon size={18} color={THEME.accent} />
-                      <span className="font-bold text-white">CARRIER FREQUENCY CONTROL:</span>
+                      <SlidersIcon size={16} color={THEME.accent} />
+                      <span className="font-bold text-white text-[11px] sm:text-xs">CARRIER FREQ:</span>
                     </div>
-                    <span className="text-[#FF6B35] font-black text-lg">{carrierFreq} kHz</span>
+                    <span className="text-[#FF6B35] font-black text-base sm:text-lg">{carrierFreq} kHz</span>
                   </div>
 
                   <input
@@ -257,11 +257,11 @@ export const ScrollyOverlay: React.FC = () => {
               animate={{ opacity: 1, scale: 1, filter: 'blur(0px)', y: 0 }}
               exit={{ opacity: 0, scale: 0.5, filter: 'blur(40px)', y: -20 }}
               transition={getChapterTransition(2)}
-              className="flex flex-col gap-8 w-full pointer-events-auto"
+              className="flex flex-col gap-6 sm:gap-8 w-full pointer-events-auto"
             >
-              <div className="flex flex-col gap-4 max-w-2xl">
+              <div className="flex flex-col gap-3 sm:gap-4 max-w-2xl">
                 <span
-                  className="text-xs font-mono tracking-widest uppercase font-bold px-3.5 py-1 rounded-md border w-fit"
+                  className="text-[11px] sm:text-xs font-mono tracking-widest uppercase font-bold px-3 py-1 rounded-md border w-fit"
                   style={{
                     backgroundColor: 'rgba(255, 107, 53, 0.08)',
                     borderColor: 'rgba(255, 107, 53, 0.25)',
@@ -271,23 +271,23 @@ export const ScrollyOverlay: React.FC = () => {
                   PIPELINE 02 // MODULATE
                 </span>
 
-                <h2 className="font-display font-black text-3xl sm:text-5xl text-white leading-tight">
+                <h2 className="font-display font-black text-2xl sm:text-4xl text-white leading-tight">
                   Frequency-Shift Keyed Encoding
                 </h2>
 
-                <p className="text-base text-slate-300 font-normal">
+                <p className="text-sm sm:text-base text-slate-300 font-normal">
                   Binary payloads are encoded via dual-tone 2-FSK (Mark: 19.5 kHz, Space: 21.5 kHz) with zero audible distortion.
                 </p>
               </div>
 
-              <TelemetryPanel className="flex flex-col gap-6 w-full">
-                <div className="grid grid-cols-8 gap-3 font-mono text-center">
+              <TelemetryPanel className="flex flex-col gap-4 sm:gap-6 w-full p-4 sm:p-6">
+                <div className="grid grid-cols-4 sm:grid-cols-8 gap-2 sm:gap-3 font-mono text-center">
                   {['1', '0', '1', '1', '0', '0', '1', '0'].map((bit, idx) => (
                     <div
                       key={idx}
-                      className="p-3 rounded-xl border flex flex-col items-center justify-center bg-white/[0.02] border-white/10"
+                      className="p-2 sm:p-3 rounded-xl border flex flex-col items-center justify-center bg-white/[0.02] border-white/10"
                     >
-                      <span className={`text-xl font-black ${bit === '1' ? 'text-[#FF6B35]' : 'text-slate-400'}`}>
+                      <span className={`text-lg sm:text-xl font-black ${bit === '1' ? 'text-[#FF6B35]' : 'text-slate-400'}`}>
                         {bit}
                       </span>
                     </div>
@@ -305,37 +305,37 @@ export const ScrollyOverlay: React.FC = () => {
               animate={{ opacity: 1, scale: 1, filter: 'blur(0px)', y: 0 }}
               exit={{ opacity: 0, scale: 0.5, filter: 'blur(40px)', y: -20 }}
               transition={getChapterTransition(3)}
-              className="flex flex-col gap-8 w-full pointer-events-auto"
+              className="flex flex-col gap-6 sm:gap-8 w-full pointer-events-auto"
             >
-              <div className="flex flex-col gap-4 max-w-2xl">
+              <div className="flex flex-col gap-3 sm:gap-4 max-w-2xl">
                 <span
-                  className="text-xs font-mono tracking-widest uppercase font-bold px-3.5 py-1 rounded-md border w-fit"
+                  className="text-[11px] sm:text-xs font-mono tracking-widest uppercase font-bold px-3 py-1 rounded-md border w-fit"
                   style={{
                     backgroundColor: 'rgba(255, 107, 53, 0.08)',
                     borderColor: 'rgba(255, 107, 53, 0.25)',
                     color: THEME.accent,
                   }}
                 >
-                  PIPELINE 03 // PROPAGATE (WIDE ACOUSTIC WAVEFRONT)
+                  PIPELINE 03 // PROPAGATE
                 </span>
 
-                <h2 className="font-display font-black text-3xl sm:text-5xl text-white leading-tight">
+                <h2 className="font-display font-black text-2xl sm:text-4xl text-white leading-tight">
                   Air-Gap Wavefront Expansion
                 </h2>
 
-                <p className="text-base text-slate-300 font-normal">
+                <p className="text-sm sm:text-base text-slate-300 font-normal">
                   Acoustic pressure waves expand spherically at 343 m/s across the physical air gap toward the receiver node.
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
                 {[
                   { title: 'Air-Gapped Diode', metric: 'ZERO RF EMISSION' },
                   { title: 'Proximity Handshake', metric: '< 15ms LATENCY' },
                   { title: 'Chassis Telemetry', metric: 'SOLID & AIR COMPLIANT' },
                 ].map((item, idx) => (
-                  <TelemetryPanel key={idx} className="flex flex-col justify-between gap-4 p-6">
-                    <span className="font-bold text-white text-lg">{item.title}</span>
+                  <TelemetryPanel key={idx} className="flex flex-col justify-between gap-3 sm:gap-4 p-5">
+                    <span className="font-bold text-white text-base sm:text-lg">{item.title}</span>
                     <span className="font-mono text-xs text-[#FF6B35] font-bold">{item.metric}</span>
                   </TelemetryPanel>
                 ))}
@@ -353,10 +353,10 @@ export const ScrollyOverlay: React.FC = () => {
               transition={getChapterTransition(4)}
               className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch w-full pointer-events-auto"
             >
-              <div className="lg:col-span-6 flex flex-col justify-between gap-6 telemetry-glass p-8 md:p-12">
-                <div className="flex flex-col gap-4">
+              <div className="lg:col-span-6 flex flex-col justify-between gap-5 telemetry-glass p-6 sm:p-10">
+                <div className="flex flex-col gap-3">
                   <span
-                    className="text-xs font-mono tracking-widest uppercase font-bold px-3.5 py-1 rounded-md border w-fit"
+                    className="text-[11px] sm:text-xs font-mono tracking-widest uppercase font-bold px-3 py-1 rounded-md border w-fit"
                     style={{
                       backgroundColor: 'rgba(255, 107, 53, 0.08)',
                       borderColor: 'rgba(255, 107, 53, 0.25)',
@@ -366,7 +366,7 @@ export const ScrollyOverlay: React.FC = () => {
                     PIPELINE 04 // DEMODULATE (RECEIVER FOCUS)
                   </span>
 
-                  <h2 className="font-display font-black text-3xl sm:text-5xl text-white leading-tight">
+                  <h2 className="font-display font-black text-2xl sm:text-4xl text-white leading-tight">
                     FFT Spectrum Extraction
                   </h2>
 
@@ -391,41 +391,41 @@ export const ScrollyOverlay: React.FC = () => {
               animate={{ opacity: 1, scale: 1, filter: 'blur(0px)', y: 0 }}
               exit={{ opacity: 0, scale: 0.5, filter: 'blur(40px)', y: -20 }}
               transition={getChapterTransition(5)}
-              className="flex flex-col gap-8 w-full pointer-events-auto"
+              className="flex flex-col gap-6 sm:gap-8 w-full pointer-events-auto"
             >
-              <div className="flex flex-col gap-4 max-w-2xl">
+              <div className="flex flex-col gap-3 sm:gap-4 max-w-2xl">
                 <span
-                  className="text-xs font-mono tracking-widest uppercase font-bold px-3.5 py-1 rounded-md border w-fit"
+                  className="text-[11px] sm:text-xs font-mono tracking-widest uppercase font-bold px-3 py-1 rounded-md border w-fit"
                   style={{
                     backgroundColor: 'rgba(255, 107, 53, 0.08)',
                     borderColor: 'rgba(255, 107, 53, 0.25)',
                     color: THEME.accent,
                   }}
                 >
-                  PIPELINE 05 // DECODE (DUAL ALIGNMENT)
+                  PIPELINE 05 // DECODE
                 </span>
 
-                <h2 className="font-display font-black text-3xl sm:text-5xl text-white leading-tight">
+                <h2 className="font-display font-black text-2xl sm:text-4xl text-white leading-tight">
                   Frame Assembly & CRC Validation
                 </h2>
               </div>
 
-              <TelemetryPanel className="grid grid-cols-1 md:grid-cols-4 gap-4 font-mono text-xs">
-                <div className="p-4 rounded-xl bg-white/[0.02] border border-white/10">
+              <TelemetryPanel className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 font-mono text-xs p-4 sm:p-6">
+                <div className="p-3 rounded-xl bg-white/[0.02] border border-white/10">
                   <span className="text-[10px] text-slate-500">PREAMBLE [4B]</span>
-                  <p className="text-base font-black text-[#FF6B35]">0xAA55AA55</p>
+                  <p className="text-sm sm:text-base font-black text-[#FF6B35]">0xAA55AA55</p>
                 </div>
-                <div className="p-4 rounded-xl bg-white/[0.02] border border-white/10">
+                <div className="p-3 rounded-xl bg-white/[0.02] border border-white/10">
                   <span className="text-[10px] text-slate-500">HEADER [8B]</span>
-                  <p className="text-base font-black text-white">0x01 · LEN:48</p>
+                  <p className="text-sm sm:text-base font-black text-white">0x01 · LEN:48</p>
                 </div>
-                <div className="p-4 rounded-xl bg-[#FF6B35]/[0.05] border border-[#FF6B35]/30">
+                <div className="p-3 rounded-xl bg-[#FF6B35]/[0.05] border border-[#FF6B35]/30">
                   <span className="text-[10px] text-[#FF6B35]">PAYLOAD [48B]</span>
-                  <p className="text-base font-black text-white truncate">4A 6F 68 6E</p>
+                  <p className="text-sm sm:text-base font-black text-white truncate">4A 6F 68 6E</p>
                 </div>
-                <div className="p-4 rounded-xl bg-white/[0.02] border border-white/10">
+                <div className="p-3 rounded-xl bg-white/[0.02] border border-white/10">
                   <span className="text-[10px] text-slate-500">CRC-32 [4B]</span>
-                  <p className="text-base font-black text-[#10B981]">0x8F9B201A</p>
+                  <p className="text-sm sm:text-base font-black text-[#10B981]">0x8F9B201A</p>
                 </div>
               </TelemetryPanel>
             </motion.div>
@@ -439,49 +439,49 @@ export const ScrollyOverlay: React.FC = () => {
               animate={{ opacity: 1, scale: 1, filter: 'blur(0px)', y: 0 }}
               exit={{ opacity: 0, scale: 0.5, filter: 'blur(40px)', y: -20 }}
               transition={getChapterTransition(6)}
-              className="flex flex-col gap-6 w-full pointer-events-auto"
+              className="flex flex-col gap-5 sm:gap-6 w-full pointer-events-auto"
             >
-              <div className="flex flex-col gap-3 max-w-2xl">
+              <div className="flex flex-col gap-2 sm:gap-3 max-w-2xl">
                 <span
-                  className="text-xs font-mono tracking-widest uppercase font-bold px-3.5 py-1 rounded-md border w-fit"
+                  className="text-[11px] sm:text-xs font-mono tracking-widest uppercase font-bold px-3 py-1 rounded-md border w-fit"
                   style={{
                     backgroundColor: 'rgba(255, 107, 53, 0.08)',
                     borderColor: 'rgba(255, 107, 53, 0.25)',
                     color: THEME.accent,
                   }}
                 >
-                  PIPELINE 06 // SPECIFICATIONS & DEPLOYMENT
+                  PIPELINE 06 // SPECIFICATIONS
                 </span>
 
-                <h2 className="font-display font-black text-3xl sm:text-5xl text-white leading-tight">
+                <h2 className="font-display font-black text-2xl sm:text-4xl text-white leading-tight">
                   WAVELINK Hardware Data Sheet
                 </h2>
               </div>
 
-              <TelemetryPanel className="p-6 flex flex-col gap-6">
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 font-mono text-xs">
+              <TelemetryPanel className="p-5 sm:p-6 flex flex-col gap-4 sm:gap-6">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 font-mono text-xs">
                   <div>
-                    <span className="text-slate-500">CARRIER BAND</span>
+                    <span className="text-slate-500 text-[10px] sm:text-xs">CARRIER BAND</span>
                     <p className="text-white font-bold">18.0–24.0 kHz</p>
                   </div>
                   <div>
-                    <span className="text-slate-500">RANGE</span>
+                    <span className="text-slate-500 text-[10px] sm:text-xs">RANGE</span>
                     <p className="text-white font-bold">0.1–5.0 Meters</p>
                   </div>
                   <div>
-                    <span className="text-slate-500">THROUGHPUT</span>
+                    <span className="text-slate-500 text-[10px] sm:text-xs">THROUGHPUT</span>
                     <p className="text-[#FF6B35] font-bold">16.4 kbps</p>
                   </div>
                   <div>
-                    <span className="text-slate-500">POWER</span>
+                    <span className="text-slate-500 text-[10px] sm:text-xs">POWER</span>
                     <p className="text-white font-bold">0.08 mW Active</p>
                   </div>
                 </div>
 
-                <div className="flex justify-between items-center pt-4 border-t border-white/10">
-                  <span className="font-mono text-xs text-slate-400">WAVELINK Dev Kit v2 (2x Core Modules + C/Rust SDK)</span>
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pt-3 sm:pt-4 border-t border-white/10">
+                  <span className="font-mono text-[11px] sm:text-xs text-slate-400">WAVELINK Dev Kit v2 (2x Core Modules + SDK)</span>
                   <button
-                    className="px-6 py-3 rounded-xl font-mono text-xs font-bold flex items-center gap-2 cursor-pointer shadow-lg"
+                    className="px-5 py-2.5 sm:px-6 sm:py-3 rounded-xl font-mono text-xs font-bold flex items-center gap-2 cursor-pointer shadow-lg w-full sm:w-auto justify-center"
                     style={{
                       backgroundColor: THEME.accent,
                       color: '#0E0E12',
@@ -500,7 +500,7 @@ export const ScrollyOverlay: React.FC = () => {
       </div>
 
       {/* 4. Persistent Status Telemetry Ticker */}
-      <div className="flex justify-between items-center text-xs font-mono text-slate-500 border-t border-white/10 pt-4 pointer-events-auto">
+      <div className="flex justify-between items-center text-[10px] sm:text-xs font-mono text-slate-500 border-t border-white/10 pt-3 sm:pt-4 pointer-events-auto">
         <span>CHAPTER 0{currentChapter + 1} OF 07</span>
         <div className="flex items-center gap-2">
           <span className="w-1.5 h-1.5 rounded-full bg-[#FF6B35] animate-pulse" />

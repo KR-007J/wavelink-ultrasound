@@ -12,22 +12,39 @@ export const LenisProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   useEffect(() => {
     const lenis = new Lenis({
-      duration: 1.2,
+      duration: 1.0,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
+      syncTouch: false,
     });
 
-    lenis.on('scroll', (e: any) => {
+    const handleScroll = (e: any) => {
       ScrollTrigger.update();
 
-      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
-      if (scrollHeight > 0) {
-        const progress = window.scrollY / scrollHeight;
-        setScrollProgress(progress);
+      if (e && typeof e.progress === 'number') {
+        setScrollProgress(Math.max(0, Math.min(1, e.progress)));
+      } else {
+        const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+        if (scrollHeight > 0) {
+          const p = window.scrollY / scrollHeight;
+          setScrollProgress(Math.max(0, Math.min(1, p)));
+        }
       }
 
-      setScrollVelocity(e.velocity || 0);
-    });
+      setScrollVelocity(e?.velocity || 0);
+    };
+
+    lenis.on('scroll', handleScroll);
+
+    // Window scroll fallback for mobile touch devices
+    const onWindowScroll = () => {
+      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (scrollHeight > 0) {
+        const p = window.scrollY / scrollHeight;
+        setScrollProgress(Math.max(0, Math.min(1, p)));
+      }
+    };
+    window.addEventListener('scroll', onWindowScroll, { passive: true });
 
     const tickerCallback = (time: number) => {
       lenis.raf(time * 1000);
@@ -37,6 +54,7 @@ export const LenisProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     gsap.ticker.lagSmoothing(0);
 
     return () => {
+      window.removeEventListener('scroll', onWindowScroll);
       gsap.ticker.remove(tickerCallback);
       lenis.destroy();
     };

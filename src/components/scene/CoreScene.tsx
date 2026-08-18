@@ -1,6 +1,6 @@
 import React, { Suspense, useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { ContactShadows, Environment } from '@react-three/drei';
+import { ContactShadows } from '@react-three/drei';
 import * as THREE from 'three';
 import { TransducerCore } from './TransducerCore';
 import { WavePulse } from './WavePulse';
@@ -25,7 +25,7 @@ const DynamicLightingRig: React.FC = () => {
     const nextWp = CHAPTER_WAYPOINTS[waypointIndex + 1];
 
     const targetIntensity = THREE.MathUtils.lerp(currentWp.lightIntensity, nextWp.lightIntensity, segmentP);
-    keyLightRef.current.intensity = THREE.MathUtils.lerp(keyLightRef.current.intensity, targetIntensity * 1.15, 0.08);
+    keyLightRef.current.intensity = THREE.MathUtils.lerp(keyLightRef.current.intensity, targetIntensity * 1.25, 0.08);
 
     keyLightRef.current.position.lerp(
       new THREE.Vector3().lerpVectors(currentWp.lightPos, nextWp.lightPos, segmentP),
@@ -39,36 +39,45 @@ const DynamicLightingRig: React.FC = () => {
       <directionalLight
         ref={keyLightRef}
         position={[5, 8, 6]}
-        intensity={2.5}
+        intensity={2.8}
         color="#FFF5EB"
         castShadow
         shadow-mapSize={[1024, 1024]}
         shadow-bias={-0.0001}
       />
       
-      {/* 2. Soft Warm Fill Light */}
+      {/* 2. Secondary Studio Top Light for Crisp Specular Highlights */}
       <directionalLight
-        position={[-4, 3, 3]}
-        intensity={0.6}
-        color="#A3A1AC"
+        position={[0, 10, 2]}
+        intensity={1.2}
+        color="#FFF8F0"
       />
 
-      {/* 3. Solar Radiant Amber Rim Light (Warm Grazing Silhouette) */}
+      {/* 3. Soft Warm Fill Light */}
+      <directionalLight
+        position={[-5, 3, 4]}
+        intensity={0.8}
+        color="#D4D0DC"
+      />
+
+      {/* 4. Solar Radiant Amber Rim Light (Warm Grazing Silhouette) */}
       <pointLight
         position={[-4, -3, -4]}
         color={THEME.accent}
-        intensity={3.0}
-        distance={14}
+        intensity={3.5}
+        distance={16}
       />
       <pointLight
         position={[4, -2, -3]}
         color={THEME.secondary}
-        intensity={1.5}
-        distance={10}
+        intensity={2.0}
+        distance={12}
       />
 
-      {/* Base Warm Mineral Ambient */}
-      <ambientLight intensity={0.35} color="#1A1622" />
+      {/* 5. Base Warm Mineral Ambient Hemisphere */}
+      <hemisphereLight
+        args={['#FFF5EB', '#1A1622', 0.6]}
+      />
     </>
   );
 };
@@ -76,7 +85,7 @@ const DynamicLightingRig: React.FC = () => {
 export const CoreScene: React.FC = () => {
   return (
     <div
-      className="fixed inset-0 w-screen h-screen z-0 overflow-hidden pointer-events-none"
+      className="fixed inset-0 w-full h-full z-0 overflow-hidden pointer-events-none"
       style={{
         position: 'fixed',
         top: 0,
@@ -92,13 +101,12 @@ export const CoreScene: React.FC = () => {
         shadows
         camera={{ position: [2.4, 0.8, 5.2], fov: 45 }}
         dpr={[1, 2]}
-        gl={{ powerPreference: 'high-performance', antialias: true }}
+        gl={{ powerPreference: 'high-performance', antialias: true, alpha: false }}
       >
         {/* Soft Warm Viewport Fog */}
         <fog attach="fog" args={[THEME.bg, 6, 24]} />
 
         <DynamicLightingRig />
-        <Environment preset="studio" />
         <CameraRig />
 
         <Suspense fallback={null}>
