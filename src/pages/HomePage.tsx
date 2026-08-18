@@ -1,31 +1,55 @@
-import React from 'react';
-import { PhotorealisticHeroScene } from '../components/scene/PhotorealisticHeroScene';
+import React, { useState } from 'react';
 import { CoreScene } from '../components/scene/CoreScene';
 import { ScrollyOverlay } from '../components/scrollytelling/ScrollyOverlay';
-import { useWavelinkStore } from '../store/useWavelinkStore';
+import { StoryDeck } from '../components/scrollytelling/StoryDeck';
 
 interface HomePageProps {
   onOpenDevKitModal?: () => void;
 }
 
 export const HomePage: React.FC<HomePageProps> = ({ onOpenDevKitModal }) => {
-  const isExplodedView = useWavelinkStore((s) => s.isExplodedView);
-  const isFreeOrbit = useWavelinkStore((s) => s.isFreeOrbit);
+  const [viewMode, setViewMode] = useState<'storybook' | 'scrolly'>('storybook');
 
   return (
-    <div className="scene-root relative w-full h-[700vh]">
-      {/* 1. Photorealistic 8K Multi-Frame Cinematic Movie Canvas */}
-      <PhotorealisticHeroScene />
+    <div className="scene-root relative w-full">
+      {/* 3D CGI / VFX Spatial Background */}
+      <CoreScene />
 
-      {/* 2. Interactive 3D Three.js Spatial Layer (Activates on 3D Orbit / CAD Explode) */}
-      {(isExplodedView || isFreeOrbit) && (
-        <div className="fixed inset-0 z-0 pointer-events-auto">
-          <CoreScene />
+      {/* Floating Presentation Mode Toggle */}
+      <div className="fixed top-20 right-4 sm:right-12 z-30 flex items-center gap-1 p-1 rounded-xl bg-black/60 backdrop-blur-md border border-white/10 font-mono text-[10px] sm:text-xs">
+        <button
+          onClick={() => setViewMode('storybook')}
+          className={`px-3 py-1 rounded-lg transition-all cursor-pointer ${
+            viewMode === 'storybook'
+              ? 'bg-[#FF6B35] text-[#0E0E12] font-bold shadow-md'
+              : 'text-slate-400 hover:text-white'
+          }`}
+        >
+          📖 STORYBOOK DECK
+        </button>
+        <button
+          onClick={() => setViewMode('scrolly')}
+          className={`px-3 py-1 rounded-lg transition-all cursor-pointer ${
+            viewMode === 'scrolly'
+              ? 'bg-[#FF6B35] text-[#0E0E12] font-bold shadow-md'
+              : 'text-slate-400 hover:text-white'
+          }`}
+        >
+          🎬 3D SCROLLY
+        </button>
+      </div>
+
+      {/* Mode 1: Interactive Author Storybook Presentation Deck */}
+      {viewMode === 'storybook' ? (
+        <div className="min-h-screen">
+          <StoryDeck onOpenDevKitModal={onOpenDevKitModal} />
+        </div>
+      ) : (
+        /* Mode 2: Camera-Gated 700vh Scrollytelling */
+        <div className="w-full h-[700vh]">
+          <ScrollyOverlay onOpenDevKitModal={onOpenDevKitModal} />
         </div>
       )}
-
-      {/* 3. Camera-Gated HTML Chapter Narrative Overlay */}
-      <ScrollyOverlay onOpenDevKitModal={onOpenDevKitModal} />
     </div>
   );
 };

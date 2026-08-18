@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { THEME } from '../lib/theme';
 import { TelemetryPanel } from '../components/telemetry/TelemetryPanel';
 import { OscilloscopeStrip } from '../components/telemetry/OscilloscopeStrip';
@@ -8,6 +8,9 @@ import { LinkBudgetCalculator } from '../components/simulation/LinkBudgetCalcula
 import { ImpairmentSandbox } from '../components/simulation/ImpairmentSandbox';
 import { ArchitectureDiagram } from '../components/simulation/ArchitectureDiagram';
 import { ConstellationPlot } from '../components/telemetry/ConstellationPlot';
+import { UltrasonicRadar } from '../components/simulation/UltrasonicRadar';
+import { BeamSteeringSimulator } from '../components/simulation/BeamSteeringSimulator';
+import { AcousticLevitator } from '../components/simulation/AcousticLevitator';
 import {
   TransducerIcon,
   WaveformIcon,
@@ -16,6 +19,8 @@ import {
 } from '../components/telemetry/CustomAcousticIcons';
 
 export const MechanicsPage: React.FC = () => {
+  const [activeLabTab, setActiveLabTab] = useState<'radar' | 'beam' | 'levitator'>('radar');
+
   const deepMechanics = [
     {
       icon: TransducerIcon,
@@ -67,109 +72,112 @@ export const MechanicsPage: React.FC = () => {
         </h1>
 
         <p className="text-base sm:text-lg text-slate-300 max-w-3xl font-normal leading-relaxed">
-          Comprehensive interactive teardown of piezoelectric resonance, real-time 2-FSK acoustic packet transmission, link budget physics modeling, and jamming resistance simulations.
+          Comprehensive interactive suite: live browser microphone ultrasonic radar, 3D phased-array beam-steering, standing-wave acoustic levitator, link budget modeling, and RF EMP attack resistance.
         </p>
       </div>
 
-      {/* SYSTEM 1: Live Air-Gap Packet Transmission Simulator */}
+      {/* NEW INNOVATION SUITE: Tabbed Advanced Acoustic Research Lab */}
+      <section className="flex flex-col gap-4">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <h2 className="text-sm font-mono tracking-widest uppercase text-[#FF6B35] font-bold">
+            01 // ADVANCED ACOUSTIC RESEARCH EXPERIMENTS
+          </h2>
+
+          <div className="flex items-center gap-2 p-1 rounded-xl bg-black/50 border border-white/10 font-mono text-xs">
+            <button
+              onClick={() => setActiveLabTab('radar')}
+              className={`px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${
+                activeLabTab === 'radar' ? 'bg-[#FF6B35] text-[#0E0E12] font-bold' : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              MIC ULTRASONIC RADAR
+            </button>
+            <button
+              onClick={() => setActiveLabTab('beam')}
+              className={`px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${
+                activeLabTab === 'beam' ? 'bg-[#FF6B35] text-[#0E0E12] font-bold' : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              PHASED-ARRAY BEAMFORMER
+            </button>
+            <button
+              onClick={() => setActiveLabTab('levitator')}
+              className={`px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${
+                activeLabTab === 'levitator' ? 'bg-[#FF6B35] text-[#0E0E12] font-bold' : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              3D ACOUSTIC LEVITATOR
+            </button>
+          </div>
+        </div>
+
+        {activeLabTab === 'radar' && <UltrasonicRadar />}
+        {activeLabTab === 'beam' && <BeamSteeringSimulator />}
+        {activeLabTab === 'levitator' && <AcousticLevitator />}
+      </section>
+
+      {/* SYSTEM 2: Live Air-Gap Packet Transmission Simulator */}
       <section className="flex flex-col gap-4">
         <h2 className="text-sm font-mono tracking-widest uppercase text-[#FF6B35] font-bold">
-          01 // LIVE HARDWARE SIMULATOR
+          02 // LIVE HARDWARE PACKET TRANSMISSION SIMULATOR
         </h2>
         <PacketSimulator />
       </section>
 
-      {/* SYSTEM 2: Interactive ASIC Architecture Blueprint */}
+      {/* SYSTEM 3: I/Q Phase Constellation & Link Budget Modeler */}
       <section className="flex flex-col gap-4">
         <h2 className="text-sm font-mono tracking-widest uppercase text-[#FF6B35] font-bold">
-          02 // ASIC SYSTEM ARCHITECTURE BLOCK DIAGRAM
+          03 // I/Q PHASE CONSTELLATION & ACOUSTIC LINK BUDGET MODELER
         </h2>
-        <ArchitectureDiagram />
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <div className="lg:col-span-5">
+            <ConstellationPlot />
+          </div>
+          <div className="lg:col-span-7">
+            <LinkBudgetCalculator />
+          </div>
+        </div>
       </section>
 
-      {/* SYSTEM 3: Enterprise Link Budget & Range Calculator */}
+      {/* SYSTEM 4: RF EMP Jamming Resistance Sandbox */}
       <section className="flex flex-col gap-4">
         <h2 className="text-sm font-mono tracking-widest uppercase text-[#FF6B35] font-bold">
-          03 // ENTERPRISE LINK BUDGET & ACOUSTIC RANGE MODELER
-        </h2>
-        <LinkBudgetCalculator />
-      </section>
-
-      {/* SYSTEM 4: Hostile Channel & Jamming Resistance Sandbox */}
-      <section className="flex flex-col gap-4">
-        <h2 className="text-sm font-mono tracking-widest uppercase text-[#FF6B35] font-bold">
-          04 // HOSTILE CHANNEL & EMP JAMMING RESISTANCE
+          04 // RF EMP BLAST & DOPPLER JAMMING RESISTANCE SANDBOX
         </h2>
         <ImpairmentSandbox />
       </section>
 
-      {/* SYSTEM 5: Real-Time Phase Constellation Diagram */}
+      {/* SYSTEM 5: ASIC System Architecture Blueprint */}
       <section className="flex flex-col gap-4">
         <h2 className="text-sm font-mono tracking-widest uppercase text-[#FF6B35] font-bold">
-          05 // REAL-TIME IN-PHASE / QUADRATURE (I/Q) CONSTELLATION POLAR PLOT
+          05 // ASIC HARDWARE ARCHITECTURE BLUEPRINT
         </h2>
-        <TelemetryPanel className="p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-8">
-          <div className="flex flex-col gap-3 max-w-xl">
-            <h3 className="font-display font-bold text-xl text-white">
-              Continuous-Phase 2-FSK Trajectory Analysis
-            </h3>
-            <p className="text-sm text-slate-300 leading-relaxed font-normal">
-              Visualizing the polar symbol trajectory across $(I, Q)$ phase space. WAVELINK maintains exact phase continuity at symbol transitions ($\Delta\phi = \pm\pi$), bounding out-of-band spectral emissions and guaranteeing zero audible switching transients.
-            </p>
-            <div className="flex items-center gap-4 pt-2 font-mono text-xs text-slate-400">
-              <span>ERROR VECTOR MAGNITUDE (EVM): <strong className="text-[#10B981]">1.4% RMS</strong></span>
-              <span>CARRIER SUPPRESSION: <strong className="text-white">&gt; 45 dB</strong></span>
-            </div>
-          </div>
-
-          <div className="shrink-0">
-            <ConstellationPlot size={240} />
-          </div>
-        </TelemetryPanel>
+        <ArchitectureDiagram />
       </section>
 
-      {/* Deep Mechanics Cards Grid */}
+      {/* SYSTEM 6: Deep Physics Principles Bento Grid */}
       <section className="flex flex-col gap-6">
-        <h2 className="text-sm font-mono tracking-widest uppercase text-slate-400 font-bold">
-          05 // MATHEMATICAL FOUNDATIONS & EQUATIONS
+        <h2 className="text-sm font-mono tracking-widest uppercase text-[#FF6B35] font-bold">
+          06 // PHYSICAL PRINCIPLES & GOVERNING EQUATIONS
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {deepMechanics.map((item, idx) => {
             const Icon = item.icon;
             return (
-              <TelemetryPanel key={idx} className="flex flex-col justify-between gap-6 p-6 sm:p-8">
-                <div className="flex flex-col gap-4">
-                  <div className="flex items-center justify-between border-b border-white/10 pb-4">
-                    <div className="flex items-center gap-3">
-                      <div
-                        className="w-10 h-10 rounded-xl flex items-center justify-center border"
-                        style={{
-                          backgroundColor: 'rgba(255, 107, 53, 0.08)',
-                          borderColor: 'rgba(255, 107, 53, 0.25)',
-                        }}
-                      >
-                        <Icon size={20} color={THEME.accent} />
-                      </div>
-                      <h3 className="font-display font-bold text-lg text-white">
-                        {item.title}
-                      </h3>
-                    </div>
-                    <span className="font-mono text-xs text-slate-500">0{idx + 1}</span>
+              <TelemetryPanel key={idx} className="flex flex-col justify-between gap-4 p-6 sm:p-8">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center">
+                    <Icon size={18} color={THEME.accent} />
                   </div>
-
-                  <div className="p-3 rounded-xl bg-black/40 border border-white/10 font-mono text-xs text-[#FF6B35]">
-                    {item.formula}
+                  <div>
+                    <h3 className="font-display font-bold text-base text-white">{item.title}</h3>
+                    <span className="font-mono text-xs text-[#FF6B35]">{item.formula}</span>
                   </div>
-
-                  <p className="text-sm leading-relaxed text-slate-300 font-normal">
-                    {item.desc}
-                  </p>
                 </div>
 
-                <div className="flex justify-between items-center pt-4 border-t border-white/10 font-mono text-xs text-slate-500">
-                  <span>STATUS: VERIFIED</span>
-                  <span className="text-[#FF6B35]">60 FPS DSP REAL-TIME</span>
-                </div>
+                <p className="text-sm leading-relaxed text-slate-300 font-normal">
+                  {item.desc}
+                </p>
               </TelemetryPanel>
             );
           })}
