@@ -4,6 +4,7 @@ import { THEME } from '../lib/theme';
 import { TelemetryPanel } from '../components/telemetry/TelemetryPanel';
 import { TransducerIcon, ArrowRightIcon } from '../components/telemetry/CustomAcousticIcons';
 import { TactileButton } from '../components/ui/TactileButton';
+import { BenchmarkMatrix } from '../components/telemetry/BenchmarkMatrix';
 
 interface OriginPageProps {
   onNavigate: (page: string) => void;
@@ -111,8 +112,13 @@ export const OriginPage: React.FC<OriginPageProps> = ({ onNavigate }) => {
         ))}
       </div>
 
+      {/* Enterprise Protocol Benchmark Matrix */}
+      <div className="mt-8">
+        <BenchmarkMatrix />
+      </div>
+
       {/* Connected Architecture CTA */}
-      <div className="mt-16 p-6 sm:p-8 rounded-2xl bg-white/[0.02] border border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+      <div className="mt-12 p-6 sm:p-8 rounded-2xl bg-white/[0.02] border border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
         <div className="flex items-center gap-4">
           <div
             className="w-12 h-12 rounded-xl flex items-center justify-center border shrink-0"

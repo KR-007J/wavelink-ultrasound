@@ -4,6 +4,7 @@ import { TelemetryPanel } from '../components/telemetry/TelemetryPanel';
 import { TransducerIcon, ArrowRightIcon } from '../components/telemetry/CustomAcousticIcons';
 import { TactileButton } from '../components/ui/TactileButton';
 import { FirmwareTerminal } from '../components/ui/FirmwareTerminal';
+import { ComplianceHub } from '../components/telemetry/ComplianceHub';
 
 interface DeployPageProps {
   onOpenDevKitModal: () => void;
@@ -207,6 +208,9 @@ await engine.startAcousticDemodulator();`,
           </table>
         </TelemetryPanel>
       </div>
+
+      {/* Enterprise Security Compliance & Certifications Hub */}
+      <ComplianceHub />
 
       {/* Connected Dev Kit Request Module */}
       <div className="p-6 sm:p-8 rounded-2xl bg-black/60 border border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
