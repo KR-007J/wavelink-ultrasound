@@ -3,8 +3,13 @@ import { motion } from 'framer-motion';
 import { THEME } from '../lib/theme';
 import { TelemetryPanel } from '../components/telemetry/TelemetryPanel';
 import { TransducerIcon, ArrowRightIcon } from '../components/telemetry/CustomAcousticIcons';
+import { TactileButton } from '../components/ui/TactileButton';
 
-export const OriginPage: React.FC = () => {
+interface OriginPageProps {
+  onNavigate: (page: string) => void;
+}
+
+export const OriginPage: React.FC<OriginPageProps> = ({ onNavigate }) => {
   const originChapters = [
     {
       num: '01',
@@ -33,7 +38,7 @@ export const OriginPage: React.FC = () => {
   ];
 
   return (
-    <div className="relative min-h-screen pt-32 pb-24 px-6 md:px-12 max-w-5xl mx-auto w-full z-10">
+    <div className="relative min-h-screen pt-32 pb-24 px-4 sm:px-8 md:px-12 max-w-5xl mx-auto w-full z-10">
       
       {/* Page Header */}
       <div className="flex flex-col gap-6 mb-16">
@@ -50,7 +55,7 @@ export const OriginPage: React.FC = () => {
           </span>
         </div>
 
-        <h1 className="font-display font-black text-4xl sm:text-6xl text-white tracking-tight leading-tight">
+        <h1 className="font-display font-black text-3xl sm:text-5xl lg:text-6xl text-white tracking-tight leading-tight">
           Pioneering Air-Gapped <br />
           <span style={{ color: THEME.accent }}>Acoustic Telemetry.</span>
         </h1>
@@ -106,8 +111,8 @@ export const OriginPage: React.FC = () => {
         ))}
       </div>
 
-      {/* Explore Mechanics CTA */}
-      <div className="mt-16 p-8 rounded-2xl bg-white/[0.02] border border-white/10 flex flex-col sm:flex-row items-center justify-between gap-6">
+      {/* Connected Architecture CTA */}
+      <div className="mt-16 p-6 sm:p-8 rounded-2xl bg-white/[0.02] border border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
         <div className="flex items-center gap-4">
           <div
             className="w-12 h-12 rounded-xl flex items-center justify-center border shrink-0"
@@ -124,18 +129,13 @@ export const OriginPage: React.FC = () => {
           </div>
         </div>
 
-        <a href="#mechanics">
-          <button
-            className="px-6 py-3 rounded-xl font-mono text-xs font-bold flex items-center gap-2 cursor-pointer whitespace-nowrap"
-            style={{
-              backgroundColor: THEME.accent,
-              color: '#0E0E12',
-            }}
-          >
-            <span>VIEW MECHANICS</span>
-            <ArrowRightIcon size={14} color="#0E0E12" />
-          </button>
-        </a>
+        <TactileButton
+          onClick={() => onNavigate('mechanics')}
+          variant="primary"
+          icon={<ArrowRightIcon size={14} color="#0E0E12" />}
+        >
+          VIEW MECHANICS
+        </TactileButton>
       </div>
 
     </div>

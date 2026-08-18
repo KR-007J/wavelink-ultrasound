@@ -1,10 +1,11 @@
 import React, { Suspense, useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { ContactShadows } from '@react-three/drei';
+import { ContactShadows, OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
 import { TransducerCore } from './TransducerCore';
 import { WavePulse } from './WavePulse';
 import { ReceiverNode } from './ReceiverNode';
+import { AcousticHarmonics } from './AcousticHarmonics';
 import { CameraRig } from './CameraRig';
 import { useWavelinkStore } from '../../store/useWavelinkStore';
 import { CHAPTER_WAYPOINTS } from '../../lib/cameraPaths';
@@ -57,24 +58,26 @@ const DynamicLightingRig: React.FC = () => {
       <directionalLight
         position={[-5, 3, 4]}
         intensity={0.8}
-        color="#D4D0DC"
+        color="#F5ECE0"
       />
 
-      {/* 4. Solar Radiant Amber Rim Light (Warm Grazing Silhouette) */}
+      {/* 4. Warm Solar Amber Grazing Rim Light */}
       <pointLight
-        position={[-4, -3, -4]}
+        position={[-3.5, -2, -3]}
+        intensity={2.2}
         color={THEME.accent}
-        intensity={3.5}
-        distance={16}
-      />
-      <pointLight
-        position={[4, -2, -3]}
-        color={THEME.secondary}
-        intensity={2.0}
-        distance={12}
+        distance={10}
       />
 
-      {/* 5. Base Warm Mineral Ambient Hemisphere */}
+      {/* 5. Champagne Gold Secondary Edge Light */}
+      <pointLight
+        position={[3.5, -1, 3]}
+        intensity={1.5}
+        color={THEME.secondary}
+        distance={8}
+      />
+
+      {/* 6. Mineral Basalt Ambient Hemisphere Light */}
       <hemisphereLight
         args={['#FFF5EB', '#1A1622', 0.6]}
       />
@@ -83,9 +86,13 @@ const DynamicLightingRig: React.FC = () => {
 };
 
 export const CoreScene: React.FC = () => {
+  const isFreeOrbit = useWavelinkStore((s) => s.isFreeOrbit);
+
   return (
     <div
-      className="fixed inset-0 w-full h-full z-0 overflow-hidden pointer-events-none"
+      className={`fixed inset-0 w-full h-full z-0 overflow-hidden ${
+        isFreeOrbit ? 'pointer-events-auto cursor-grab active:cursor-grabbing' : 'pointer-events-none'
+      }`}
       style={{
         position: 'fixed',
         top: 0,
@@ -93,7 +100,6 @@ export const CoreScene: React.FC = () => {
         width: '100vw',
         height: '100vh',
         zIndex: 0,
-        pointerEvents: 'none',
         backgroundColor: THEME.bg,
       }}
     >
@@ -109,6 +115,16 @@ export const CoreScene: React.FC = () => {
         <DynamicLightingRig />
         <CameraRig />
 
+        {isFreeOrbit && (
+          <OrbitControls
+            enableDamping
+            dampingFactor={0.05}
+            minDistance={2.5}
+            maxDistance={12}
+            target={[1.2, 0.1, 0]}
+          />
+        )}
+
         <Suspense fallback={null}>
           <group position={[0, 0, 0]}>
             {/* The 3D Transducer Core Hardware */}
@@ -116,6 +132,9 @@ export const CoreScene: React.FC = () => {
 
             {/* 3D Wavefront Torus Ring Emitter (Solar Amber) */}
             <WavePulse />
+
+            {/* Organic Acoustic Harmonic Streamlines */}
+            <AcousticHarmonics />
 
             {/* Acoustic Receiver Node */}
             <ReceiverNode />

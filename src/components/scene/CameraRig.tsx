@@ -8,6 +8,7 @@ export const CameraRig: React.FC = () => {
   const { camera, size } = useThree();
   const scrollProgress = useWavelinkStore((s) => s.scrollProgress);
   const receiverTick = useWavelinkStore((s) => s.receiverTick);
+  const isFreeOrbit = useWavelinkStore((s) => s.isFreeOrbit);
 
   const targetPos = useRef(new THREE.Vector3());
   const currentLookAt = useRef(new THREE.Vector3(1.2, 0.1, 0));
@@ -25,6 +26,8 @@ export const CameraRig: React.FC = () => {
   }, [receiverTick]);
 
   useFrame((state, delta) => {
+    if (isFreeOrbit) return; // When free orbit is enabled, OrbitControls handles the camera
+
     const clampedProgress = THREE.MathUtils.clamp(scrollProgress, 0, 0.999);
     const t = state.clock.elapsedTime;
     
@@ -39,7 +42,6 @@ export const CameraRig: React.FC = () => {
     let responsiveOffsetZ = 0;
 
     if (isMobile) {
-      // Pull back camera and center slightly on mobile phones
       responsiveOffsetX = -0.9;
       responsiveOffsetZ = 1.6;
     } else if (isTablet) {

@@ -6,7 +6,12 @@ import { useWavelinkStore } from '../../store/useWavelinkStore';
 
 gsap.registerPlugin(ScrollTrigger);
 
-export const LenisProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+interface LenisProviderProps {
+  children: React.ReactNode;
+  currentPage?: string;
+}
+
+export const LenisProvider: React.FC<LenisProviderProps> = ({ children, currentPage = 'home' }) => {
   const setScrollProgress = useWavelinkStore((s) => s.setScrollProgress);
   const setScrollVelocity = useWavelinkStore((s) => s.setScrollVelocity);
 
@@ -18,31 +23,31 @@ export const LenisProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       syncTouch: false,
     });
 
+    const calculateProgress = () => {
+      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (scrollHeight > 0) {
+        const p = window.scrollY / scrollHeight;
+        setScrollProgress(Math.max(0, Math.min(1, p)));
+      } else {
+        setScrollProgress(0);
+      }
+    };
+
     const handleScroll = (e: any) => {
       ScrollTrigger.update();
-
       if (e && typeof e.progress === 'number') {
         setScrollProgress(Math.max(0, Math.min(1, e.progress)));
       } else {
-        const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
-        if (scrollHeight > 0) {
-          const p = window.scrollY / scrollHeight;
-          setScrollProgress(Math.max(0, Math.min(1, p)));
-        }
+        calculateProgress();
       }
-
       setScrollVelocity(e?.velocity || 0);
     };
 
     lenis.on('scroll', handleScroll);
 
-    // Window scroll fallback for mobile touch devices
+    // Window scroll fallback listener
     const onWindowScroll = () => {
-      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
-      if (scrollHeight > 0) {
-        const p = window.scrollY / scrollHeight;
-        setScrollProgress(Math.max(0, Math.min(1, p)));
-      }
+      calculateProgress();
     };
     window.addEventListener('scroll', onWindowScroll, { passive: true });
 
@@ -53,12 +58,19 @@ export const LenisProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     gsap.ticker.add(tickerCallback);
     gsap.ticker.lagSmoothing(0);
 
+    // Force refresh on mount/route change
+    setTimeout(() => {
+      lenis.resize();
+      ScrollTrigger.refresh();
+      calculateProgress();
+    }, 100);
+
     return () => {
       window.removeEventListener('scroll', onWindowScroll);
       gsap.ticker.remove(tickerCallback);
       lenis.destroy();
     };
-  }, [setScrollProgress, setScrollVelocity]);
+  }, [currentPage, setScrollProgress, setScrollVelocity]);
 
   return <>{children}</>;
 };

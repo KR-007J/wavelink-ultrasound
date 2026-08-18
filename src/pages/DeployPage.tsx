@@ -2,8 +2,14 @@ import React, { useState } from 'react';
 import { THEME } from '../lib/theme';
 import { TelemetryPanel } from '../components/telemetry/TelemetryPanel';
 import { TransducerIcon, ArrowRightIcon } from '../components/telemetry/CustomAcousticIcons';
+import { TactileButton } from '../components/ui/TactileButton';
+import { FirmwareTerminal } from '../components/ui/FirmwareTerminal';
 
-export const DeployPage: React.FC = () => {
+interface DeployPageProps {
+  onOpenDevKitModal: () => void;
+}
+
+export const DeployPage: React.FC<DeployPageProps> = ({ onOpenDevKitModal }) => {
   const [activeLang, setActiveLang] = useState<'c' | 'rust' | 'python' | 'wasm'>('c');
 
   const codeSnippets = {
@@ -81,7 +87,7 @@ await engine.startAcousticDemodulator();`,
   };
 
   return (
-    <div className="relative min-h-screen pt-32 pb-24 px-6 md:px-12 max-w-6xl mx-auto w-full z-10">
+    <div className="relative min-h-screen pt-32 pb-24 px-4 sm:px-8 md:px-12 max-w-6xl mx-auto w-full z-10">
       
       {/* Page Header */}
       <div className="flex flex-col gap-6 mb-16">
@@ -98,7 +104,7 @@ await engine.startAcousticDemodulator();`,
           </span>
         </div>
 
-        <h1 className="font-display font-black text-4xl sm:text-6xl text-white tracking-tight leading-tight">
+        <h1 className="font-display font-black text-3xl sm:text-5xl lg:text-6xl text-white tracking-tight leading-tight">
           Integrate in Minutes. <br />
           <span style={{ color: THEME.accent }}>Deploy with Certainty.</span>
         </h1>
@@ -110,20 +116,20 @@ await engine.startAcousticDemodulator();`,
 
       {/* Code Editor Panel */}
       <TelemetryPanel className="p-0 overflow-hidden mb-16 flex flex-col">
-        <div className="flex items-center justify-between border-b border-white/10 px-6 py-4 bg-black/40">
-          <div className="flex items-center gap-3">
-            <span className="w-3 h-3 rounded-full bg-red-500/40" />
-            <span className="w-3 h-3 rounded-full bg-yellow-500/40" />
-            <span className="w-3 h-3 rounded-full bg-green-500/40" />
-            <span className="font-mono text-xs text-slate-400 ml-3">wavelink_quickstart</span>
+        <div className="flex items-center justify-between border-b border-white/10 px-4 sm:px-6 py-4 bg-black/40">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <span className="w-2.5 sm:w-3 h-2.5 sm:h-3 rounded-full bg-red-500/40" />
+            <span className="w-2.5 sm:w-3 h-2.5 sm:h-3 rounded-full bg-yellow-500/40" />
+            <span className="w-2.5 sm:w-3 h-2.5 sm:h-3 rounded-full bg-green-500/40" />
+            <span className="font-mono text-[11px] sm:text-xs text-slate-400 ml-1 sm:ml-3">wavelink_quickstart</span>
           </div>
 
-          <div className="flex items-center gap-2 font-mono text-xs">
+          <div className="flex items-center gap-1.5 sm:gap-2 font-mono text-xs">
             {(['c', 'rust', 'python', 'wasm'] as const).map((lang) => (
               <button
                 key={lang}
                 onClick={() => setActiveLang(lang)}
-                className={`px-3 py-1.5 rounded-lg uppercase tracking-wider transition-all cursor-pointer ${
+                className={`px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg uppercase tracking-wider transition-all cursor-pointer text-[10px] sm:text-xs ${
                   activeLang === lang
                     ? 'bg-[#FF6B35]/20 text-[#FF6B35] font-bold border border-[#FF6B35]/40'
                     : 'text-slate-400 hover:text-white'
@@ -135,64 +141,75 @@ await engine.startAcousticDemodulator();`,
           </div>
         </div>
 
-        <pre className="p-6 md:p-8 font-mono text-xs md:text-sm text-slate-200 overflow-x-auto leading-relaxed bg-black/60">
+        <pre className="p-4 sm:p-8 font-mono text-xs sm:text-sm text-slate-200 overflow-x-auto leading-relaxed bg-black/60">
           <code>{codeSnippets[activeLang]}</code>
         </pre>
       </TelemetryPanel>
 
+      {/* Interactive Hardware Firmware CLI Terminal */}
+      <div className="flex flex-col gap-4 mb-16">
+        <div className="flex items-center justify-between">
+          <h3 className="font-display font-bold text-xl sm:text-2xl text-white">
+            Interactive Hardware CLI REPL
+          </h3>
+          <span className="font-mono text-xs text-[#FF6B35]">LIVE HARDWARE SERIAL EMULATION</span>
+        </div>
+        <FirmwareTerminal />
+      </div>
+
       {/* Hardware Register Map */}
       <div className="flex flex-col gap-6 mb-16">
-        <h3 className="font-display font-bold text-2xl text-white">
+        <h3 className="font-display font-bold text-xl sm:text-2xl text-white">
           Hardware Register Address Map
         </h3>
 
-        <TelemetryPanel className="p-6 overflow-x-auto">
+        <TelemetryPanel className="p-4 sm:p-6 overflow-x-auto">
           <table className="w-full text-left font-mono text-xs">
             <thead>
               <tr className="border-b border-white/10 text-slate-400">
-                <th className="py-3 px-4">OFFSET</th>
-                <th className="py-3 px-4">REGISTER NAME</th>
-                <th className="py-3 px-4">R/W</th>
-                <th className="py-3 px-4">RESET</th>
-                <th className="py-3 px-4">DESCRIPTION</th>
+                <th className="py-3 px-3 sm:px-4">OFFSET</th>
+                <th className="py-3 px-3 sm:px-4">REGISTER NAME</th>
+                <th className="py-3 px-3 sm:px-4">R/W</th>
+                <th className="py-3 px-3 sm:px-4">RESET</th>
+                <th className="py-3 px-3 sm:px-4">DESCRIPTION</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5 text-slate-300">
               <tr>
-                <td className="py-3 px-4 text-[#FF6B35]">0x0000</td>
-                <td className="py-3 px-4 font-bold text-white">WL_CTRL_REG</td>
-                <td className="py-3 px-4">R/W</td>
-                <td className="py-3 px-4">0x00000001</td>
-                <td className="py-3 px-4">Core enable, modulation select, CRC enable</td>
+                <td className="py-3 px-3 sm:px-4 text-[#FF6B35]">0x0000</td>
+                <td className="py-3 px-3 sm:px-4 font-bold text-white">WL_CTRL_REG</td>
+                <td className="py-3 px-3 sm:px-4">R/W</td>
+                <td className="py-3 px-3 sm:px-4">0x00000001</td>
+                <td className="py-3 px-3 sm:px-4">Core enable, modulation select, CRC enable</td>
               </tr>
               <tr>
-                <td className="py-3 px-4 text-[#FF6B35]">0x0004</td>
-                <td className="py-3 px-4 font-bold text-white">WL_FREQ_KHZ</td>
-                <td className="py-3 px-4">R/W</td>
-                <td className="py-3 px-4">0x00000148</td>
-                <td className="py-3 px-4">Carrier frequency tuning word (18.0–24.0 kHz)</td>
+                <td className="py-3 px-3 sm:px-4 text-[#FF6B35]">0x0004</td>
+                <td className="py-3 px-3 sm:px-4 font-bold text-white">WL_FREQ_KHZ</td>
+                <td className="py-3 px-3 sm:px-4">R/W</td>
+                <td className="py-3 px-3 sm:px-4">0x00000148</td>
+                <td className="py-3 px-3 sm:px-4">Carrier frequency tuning word (18.0–24.0 kHz)</td>
               </tr>
               <tr>
-                <td className="py-3 px-4 text-[#FF6B35]">0x0008</td>
-                <td className="py-3 px-4 font-bold text-white">WL_TX_DATA</td>
-                <td className="py-3 px-4">W</td>
-                <td className="py-3 px-4">0x00000000</td>
-                <td className="py-3 px-4">Transmit FIFO write buffer (64 bytes depth)</td>
+                <td className="py-3 px-3 sm:px-4 text-[#FF6B35]">0x0008</td>
+                <td className="py-3 px-3 sm:px-4 font-bold text-white">WL_TX_DATA</td>
+                <td className="py-3 px-3 sm:px-4">W</td>
+                <td className="py-3 px-3 sm:px-4">0x00000000</td>
+                <td className="py-3 px-3 sm:px-4">Transmit FIFO write buffer (64 bytes depth)</td>
               </tr>
               <tr>
-                <td className="py-3 px-4 text-[#FF6B35]">0x000C</td>
-                <td className="py-3 px-4 font-bold text-white">WL_RX_STATUS</td>
-                <td className="py-3 px-4">R</td>
-                <td className="py-3 px-4">0x00000000</td>
-                <td className="py-3 px-4">SNR metrics, CRC validation flags, latency gauge</td>
+                <td className="py-3 px-3 sm:px-4 text-[#FF6B35]">0x000C</td>
+                <td className="py-3 px-3 sm:px-4 font-bold text-white">WL_RX_STATUS</td>
+                <td className="py-3 px-3 sm:px-4">R</td>
+                <td className="py-3 px-3 sm:px-4">0x00000000</td>
+                <td className="py-3 px-3 sm:px-4">SNR metrics, CRC validation flags, latency gauge</td>
               </tr>
             </tbody>
           </table>
         </TelemetryPanel>
       </div>
 
-      {/* Dev Kit Request Module */}
-      <div className="p-8 rounded-2xl bg-black/60 border border-white/10 flex flex-col sm:flex-row items-center justify-between gap-6">
+      {/* Connected Dev Kit Request Module */}
+      <div className="p-6 sm:p-8 rounded-2xl bg-black/60 border border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
         <div className="flex items-center gap-4">
           <div
             className="w-12 h-12 rounded-xl flex items-center justify-center border shrink-0"
@@ -209,17 +226,13 @@ await engine.startAcousticDemodulator();`,
           </div>
         </div>
 
-        <button
-          className="px-8 py-4 rounded-xl font-mono text-xs font-bold flex items-center gap-2 cursor-pointer shadow-xl whitespace-nowrap"
-          style={{
-            backgroundColor: THEME.accent,
-            color: '#0E0E12',
-            boxShadow: '0 0 30px -5px rgba(255, 107, 53, 0.5)',
-          }}
+        <TactileButton
+          onClick={onOpenDevKitModal}
+          variant="primary"
+          icon={<ArrowRightIcon size={14} color="#0E0E12" />}
         >
-          <span>REQUEST DEV KIT</span>
-          <ArrowRightIcon size={14} color="#0E0E12" />
-        </button>
+          REQUEST DEV KIT
+        </TactileButton>
       </div>
 
     </div>

@@ -1,67 +1,92 @@
 @import "tailwindcss";
 
-@layer utilities {
-  .telemetry-glass, .enterprise-glass {
-    background: rgba(255, 245, 235, 0.035);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 1rem;
-    box-shadow: 0 20px 50px 0 rgba(0, 0, 0, 0.7), inset 0 1px 0 0 rgba(255, 245, 235, 0.08);
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+@layer base {
+  :root {
+    --bg: #0E0E12;
+    --surface: #17161D;
+    --surface-elevated: #201E27;
+    --accent: #FF6B35;
+    --secondary: #F59E0B;
+    --success: #10B981;
+    --text-primary: #FAF9FC;
+    --text-secondary: #A3A1AC;
+    --text-tertiary: #6E6C79;
+    --border: rgba(255, 255, 255, 0.08);
+    --border-hover: rgba(255, 107, 53, 0.4);
+    --grid-block: 56px;
   }
 
-  .telemetry-glass:hover, .enterprise-glass:hover {
-    border-color: rgba(255, 107, 53, 0.35);
-    box-shadow: 0 24px 60px 0 rgba(255, 107, 53, 0.08), inset 0 1px 0 0 rgba(255, 107, 53, 0.2);
-  }
-
-  .hero-glass {
-    background: rgba(255, 245, 235, 0.04);
-    backdrop-filter: blur(28px);
-    -webkit-backdrop-filter: blur(28px);
-    border: 1px solid rgba(255, 255, 255, 0.09);
-    border-radius: 1.5rem;
-    box-shadow: 0 24px 60px 0 rgba(0, 0, 0, 0.8), inset 0 1px 0 0 rgba(255, 245, 235, 0.1);
+  body {
+    background-color: var(--bg);
+    color: var(--text-primary);
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11", "ss01", "ss03";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
   }
 }
 
-html, body, #root {
-  width: 100%;
-  min-height: 100%;
-  margin: 0;
-  padding: 0;
-  background-color: #0E0E12;
-  color: #FAF9FC;
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  overflow-x: hidden;
+/* Van Lent Signature Modular Telemetry Glass */
+.telemetry-glass {
+  background: rgba(23, 22, 29, 0.75);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 1.25rem;
+  box-shadow: 0 20px 50px -12px rgba(0, 0, 0, 0.8),
+              inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-code, pre, .font-mono {
-  font-family: 'JetBrains Mono', monospace;
+.telemetry-glass:hover {
+  border-color: rgba(255, 107, 53, 0.35);
+  box-shadow: 0 25px 60px -12px rgba(255, 107, 53, 0.12),
+              inset 0 1px 0 rgba(255, 255, 255, 0.18);
 }
 
-h1, h2, h3, .font-display {
-  font-family: 'Inter', sans-serif;
-  letter-spacing: -0.03em;
+/* Van Lent Hairline Grid Dividers */
+.hairline-b {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-::selection {
-  background: rgba(255, 107, 53, 0.35);
-  color: #FFFFFF;
+.hairline-t {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-/* Warm Velvet Scrollbar */
+.hairline-l {
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.hairline-r {
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Velvety Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 5px;
+  height: 5px;
 }
+
 ::-webkit-scrollbar-track {
   background: #0E0E12;
 }
+
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.12);
+  background: #2B2835;
   border-radius: 9999px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 107, 53, 0.5);
+  background: #FF6B35;
+}
+
+/* Floating Bottom Navigation Dock (Van Lent style) */
+.floating-dock {
+  background: rgba(14, 14, 18, 0.85);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 9999px;
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.9),
+              inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }

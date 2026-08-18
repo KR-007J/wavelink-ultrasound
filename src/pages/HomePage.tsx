@@ -1,15 +1,19 @@
 import React from 'react';
-import { CoreScene } from '../components/scene/CoreScene';
+import { PhotorealisticHeroScene } from '../components/scene/PhotorealisticHeroScene';
 import { ScrollyOverlay } from '../components/scrollytelling/ScrollyOverlay';
 
-export const HomePage: React.FC = () => {
+interface HomePageProps {
+  onOpenDevKitModal?: () => void;
+}
+
+export const HomePage: React.FC<HomePageProps> = ({ onOpenDevKitModal }) => {
   return (
     <div className="scene-root relative w-full h-[700vh]">
-      {/* 3D Hardware Canvas Layer */}
-      <CoreScene />
+      {/* Photorealistic 8K Cinematic Hardware Canvas Layer */}
+      <PhotorealisticHeroScene />
 
       {/* Camera-Gated HTML Chapter Narrative Overlay */}
-      <ScrollyOverlay />
+      <ScrollyOverlay onOpenDevKitModal={onOpenDevKitModal} />
     </div>
   );
 };

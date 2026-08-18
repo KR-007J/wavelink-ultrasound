@@ -9,12 +9,20 @@ import {
   PacketIcon,
   ArrowRightIcon,
 } from '../components/telemetry/CustomAcousticIcons';
+import { TactileButton } from '../components/ui/TactileButton';
+import { MotionVideoCard } from '../components/ui/MotionVideoCard';
 
-export const ShowcasePage: React.FC = () => {
+interface ShowcasePageProps {
+  onNavigate: (page: string) => void;
+}
+
+export const ShowcasePage: React.FC<ShowcasePageProps> = ({ onNavigate }) => {
   const [selectedCase, setSelectedCase] = useState<number | null>(null);
 
   const cases = [
     {
+      type: 'scada' as const,
+      imageSrc: '/assets/scada_facility.jpg',
       icon: AcousticShieldIcon,
       title: 'Air-Gapped SCADA Data Diode',
       sector: 'Critical Infrastructure & Energy',
@@ -26,6 +34,7 @@ export const ShowcasePage: React.FC = () => {
       security: 'Hardware Unidirectional Physical Isolation',
     },
     {
+      type: 'defense' as const,
       icon: HandshakeIcon,
       title: 'Defense-Grade Proximity Provisioning',
       sector: 'Aerospace & Defense',
@@ -37,6 +46,8 @@ export const ShowcasePage: React.FC = () => {
       security: 'Room-Acoustic Physical Boundary Containment',
     },
     {
+      type: 'mesh' as const,
+      imageSrc: '/assets/transducer_macro.jpg',
       icon: TransducerIcon,
       title: 'Sub-Surface Chassis IoT Mesh',
       sector: 'Data Center Infrastructure',
@@ -48,6 +59,7 @@ export const ShowcasePage: React.FC = () => {
       security: 'Chassis Contact Guided Acoustic Waves',
     },
     {
+      type: 'pos' as const,
       icon: PacketIcon,
       title: 'Offline POS Ultrasonic Handshake',
       sector: 'Fintech & Contactless Retail',
@@ -60,8 +72,13 @@ export const ShowcasePage: React.FC = () => {
     },
   ];
 
+  const handleIntegrate = () => {
+    setSelectedCase(null);
+    onNavigate('deploy');
+  };
+
   return (
-    <div className="relative min-h-screen pt-32 pb-24 px-6 md:px-12 max-w-6xl mx-auto w-full z-10">
+    <div className="relative min-h-screen pt-32 pb-24 px-4 sm:px-8 md:px-12 max-w-6xl mx-auto w-full z-10">
       
       {/* Page Header */}
       <div className="flex flex-col gap-6 mb-16">
@@ -74,11 +91,11 @@ export const ShowcasePage: React.FC = () => {
         >
           <span className="w-1.5 h-1.5 rounded-full bg-[#FF6B35]" />
           <span className="font-mono text-[11px] uppercase tracking-widest text-[#FF6B35] font-bold">
-            ENTERPRISE DEPLOYMENTS
+            ENTERPRISE DEPLOYMENTS & LIVE MOTION
           </span>
         </div>
 
-        <h1 className="font-display font-black text-4xl sm:text-6xl text-white tracking-tight leading-tight">
+        <h1 className="font-display font-black text-3xl sm:text-5xl lg:text-6xl text-white tracking-tight leading-tight">
           Field-Tested in <br />
           <span style={{ color: THEME.accent }}>Mission-Critical Environments.</span>
         </h1>
@@ -88,50 +105,33 @@ export const ShowcasePage: React.FC = () => {
         </p>
       </div>
 
-      {/* Case Studies Grid */}
+      {/* Case Studies Motion Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-        {cases.map((item, idx) => {
-          const Icon = item.icon;
-          return (
+        {cases.map((item, idx) => (
+          <div key={idx} className="flex flex-col gap-4">
+            <MotionVideoCard
+              type={item.type}
+              imageSrc={item.imageSrc}
+              title={item.title}
+              subtitle={item.sector}
+              onClick={() => setSelectedCase(idx)}
+            />
+
             <TelemetryPanel
-              key={idx}
-              tiltOnHover
-              className="flex flex-col justify-between gap-6 p-8 cursor-pointer"
+              className="flex flex-col justify-between gap-4 p-5 cursor-pointer"
               onClick={() => setSelectedCase(idx)}
             >
-              <div className="flex flex-col gap-4">
-                <div className="flex items-center justify-between border-b border-white/10 pb-4">
-                  <div className="flex items-center gap-3">
-                    <div
-                      className="w-10 h-10 rounded-xl flex items-center justify-center border"
-                      style={{
-                        backgroundColor: 'rgba(255, 107, 53, 0.08)',
-                        borderColor: 'rgba(255, 107, 53, 0.25)',
-                      }}
-                    >
-                      <Icon size={20} color={THEME.accent} />
-                    </div>
-                    <div>
-                      <h3 className="font-display font-bold text-lg text-white">
-                        {item.title}
-                      </h3>
-                      <span className="text-[11px] font-mono text-slate-400">{item.sector}</span>
-                    </div>
-                  </div>
-                </div>
+              <p className="text-sm leading-relaxed text-slate-300 font-normal">
+                {item.summary}
+              </p>
 
-                <p className="text-sm leading-relaxed text-slate-300 font-normal">
-                  {item.summary}
-                </p>
-              </div>
-
-              <div className="flex justify-between items-center pt-4 border-t border-white/10 font-mono text-xs">
+              <div className="flex justify-between items-center pt-3 border-t border-white/10 font-mono text-xs">
                 <span className="text-slate-500">SPECIFICATION:</span>
                 <span className="text-[#FF6B35] font-bold">{item.metric}</span>
               </div>
             </TelemetryPanel>
-          );
-        })}
+          </div>
+        ))}
       </div>
 
       {/* Interactive Detail Modal */}
@@ -141,36 +141,36 @@ export const ShowcasePage: React.FC = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/85 backdrop-blur-md"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-md"
             onClick={() => setSelectedCase(null)}
           >
             <motion.div
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
-              className="max-w-2xl w-full telemetry-glass p-8 md:p-10 flex flex-col gap-6"
+              className="max-w-2xl w-full telemetry-glass p-6 sm:p-10 flex flex-col gap-6"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex justify-between items-start border-b border-white/10 pb-4">
                 <div>
-                  <h3 className="font-display font-black text-2xl text-white">
+                  <h3 className="font-display font-black text-xl sm:text-2xl text-white">
                     {cases[selectedCase].title}
                   </h3>
                   <span className="font-mono text-xs text-[#FF6B35]">{cases[selectedCase].sector}</span>
                 </div>
                 <button
                   onClick={() => setSelectedCase(null)}
-                  className="w-8 h-8 rounded-lg bg-white/10 text-white font-mono text-xs flex items-center justify-center cursor-pointer hover:bg-white/20"
+                  className="w-8 h-8 rounded-lg bg-white/10 text-white font-mono text-xs flex items-center justify-center cursor-pointer hover:bg-white/20 transition-colors"
                 >
                   ✕
                 </button>
               </div>
 
-              <p className="text-base text-slate-300 leading-relaxed font-normal">
+              <p className="text-sm sm:text-base text-slate-300 leading-relaxed font-normal">
                 {cases[selectedCase].summary}
               </p>
 
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 rounded-xl bg-black/50 border border-white/10 font-mono text-xs">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 p-4 rounded-xl bg-black/50 border border-white/10 font-mono text-xs">
                 <div>
                   <span className="text-slate-500">THROUGHPUT</span>
                   <p className="text-white font-bold">{cases[selectedCase].throughput}</p>
@@ -189,18 +189,15 @@ export const ShowcasePage: React.FC = () => {
                 </div>
               </div>
 
-              <div className="flex justify-between items-center pt-2">
-                <span className="font-mono text-xs text-slate-400">Security Mode: {cases[selectedCase].security}</span>
-                <button
-                  onClick={() => setSelectedCase(null)}
-                  className="px-6 py-2.5 rounded-xl font-mono text-xs font-bold flex items-center gap-2 cursor-pointer"
-                  style={{
-                    backgroundColor: THEME.accent,
-                    color: '#0E0E12',
-                  }}
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pt-2">
+                <span className="font-mono text-xs text-slate-400">Security: {cases[selectedCase].security}</span>
+                <TactileButton
+                  onClick={handleIntegrate}
+                  variant="primary"
+                  icon={<ArrowRightIcon size={14} color="#0E0E12" />}
                 >
-                  <span>CLOSE MODAL</span>
-                </button>
+                  INTEGRATE SDK
+                </TactileButton>
               </div>
             </motion.div>
           </motion.div>

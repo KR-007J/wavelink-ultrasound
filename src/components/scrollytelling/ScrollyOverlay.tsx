@@ -6,19 +6,29 @@ import { TelemetryPanel } from '../telemetry/TelemetryPanel';
 import { OscilloscopeStrip } from '../telemetry/OscilloscopeStrip';
 import { SpectrumBars } from '../telemetry/SpectrumBars';
 import { audioSynth } from '../../lib/audioSynthesizer';
+import { soundEngine } from '../../lib/soundEngine';
 import {
   WaveformIcon,
   PacketIcon,
   SlidersIcon,
   ArrowRightIcon,
 } from '../telemetry/CustomAcousticIcons';
+import { TactileButton } from '../ui/TactileButton';
 
-export const ScrollyOverlay: React.FC = () => {
+interface ScrollyOverlayProps {
+  onOpenDevKitModal?: () => void;
+}
+
+export const ScrollyOverlay: React.FC<ScrollyOverlayProps> = ({ onOpenDevKitModal }) => {
   const scrollProgress = useWavelinkStore((s) => s.scrollProgress);
   const carrierFreq = useWavelinkStore((s) => s.carrierFreq);
   const setCarrierFreq = useWavelinkStore((s) => s.setCarrierFreq);
   const packetSnr = useWavelinkStore((s) => s.packetSnr);
   const decodeLatency = useWavelinkStore((s) => s.decodeLatency);
+  const isExplodedView = useWavelinkStore((s) => s.isExplodedView);
+  const toggleExplodedView = useWavelinkStore((s) => s.toggleExplodedView);
+  const isFreeOrbit = useWavelinkStore((s) => s.isFreeOrbit);
+  const toggleFreeOrbit = useWavelinkStore((s) => s.toggleFreeOrbit);
 
   const [isAudioMuted, setIsAudioMuted] = useState(true);
 
@@ -108,8 +118,8 @@ export const ScrollyOverlay: React.FC = () => {
           })}
         </div>
 
-        <span className="text-[9px] text-slate-500 tracking-widest uppercase writing-mode-vertical rotate-180">
-          EPISODE 0{currentChapter + 1}
+        <span className="text-[9px] text-slate-400 font-mono tracking-widest uppercase font-bold [writing-mode:vertical-rl] select-none">
+          CHAPTER 0{currentChapter + 1}
         </span>
       </div>
 
@@ -128,9 +138,42 @@ export const ScrollyOverlay: React.FC = () => {
           ))}
         </div>
 
-        <span className="font-mono text-[10px] sm:text-xs text-[#FF6B35] font-bold">
-          CH 0{currentChapter + 1} // {chapters[currentChapter].label}
-        </span>
+        <div className="flex items-center gap-2 sm:gap-3">
+          {/* 3D Free-Orbit Inspection Mode Toggle */}
+          <button
+            onClick={() => {
+              soundEngine.playClick();
+              toggleFreeOrbit();
+            }}
+            title="Toggle 360° Free 3D Orbit Inspection"
+            className={`px-2.5 sm:px-3 py-1 rounded-lg border font-mono text-[10px] sm:text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+              isFreeOrbit
+                ? 'bg-[#10B981] text-[#0E0E12] border-[#10B981] shadow-[0_0_15px_rgba(16,185,129,0.6)]'
+                : 'bg-white/[0.04] text-slate-300 border-white/10 hover:border-[#10B981]/40 hover:text-white'
+            }`}
+          >
+            <span>{isFreeOrbit ? 'EXIT ORBIT' : 'FREE 3D'}</span>
+          </button>
+
+          {/* 3D Exploded CAD View Toggle */}
+          <button
+            onClick={() => {
+              soundEngine.playThud(!isExplodedView);
+              toggleExplodedView();
+            }}
+            className={`px-2.5 sm:px-3 py-1 rounded-lg border font-mono text-[10px] sm:text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+              isExplodedView
+                ? 'bg-[#FF6B35] text-[#0E0E12] border-[#FF6B35] shadow-[0_0_15px_rgba(255,107,53,0.6)]'
+                : 'bg-white/[0.04] text-slate-300 border-white/10 hover:border-[#FF6B35]/40 hover:text-white'
+            }`}
+          >
+            <span>{isExplodedView ? 'COLLAPSE CAD' : 'EXPLODE CAD'}</span>
+          </button>
+
+          <span className="hidden sm:inline font-mono text-[10px] sm:text-xs text-[#FF6B35] font-bold">
+            CH 0{currentChapter + 1} // {chapters[currentChapter].label}
+          </span>
+        </div>
       </div>
 
       {/* 3. Main Dynamic Chapter Stage */}
@@ -147,40 +190,60 @@ export const ScrollyOverlay: React.FC = () => {
               transition={getChapterTransition(0)}
               className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-stretch w-full"
             >
-              <div className="lg:col-span-8 flex flex-col justify-between gap-6 sm:gap-8 hero-glass p-6 sm:p-10 md:p-12 pointer-events-auto">
+              <div className="lg:col-span-7 flex flex-col justify-between gap-6 sm:gap-8 telemetry-glass p-6 sm:p-10 md:p-12 pointer-events-auto">
                 <div className="flex flex-col gap-4 sm:gap-6">
-                  <div
-                    className="flex items-center gap-2 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full border w-fit"
-                    style={{
-                      backgroundColor: 'rgba(255, 107, 53, 0.08)',
-                      borderColor: 'rgba(255, 107, 53, 0.25)',
-                    }}
-                  >
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#FF6B35] animate-ping" />
-                    <span className="font-mono text-[10px] sm:text-[11px] uppercase tracking-widest text-[#FF6B35] font-bold">
-                      NEAR-ULTRASONIC · 18–24 kHz
+                  
+                  {/* Van Lent Signature Technical Tags Bar */}
+                  <div className="flex flex-wrap items-center gap-2 font-mono text-[10px] sm:text-[11px] text-slate-400">
+                    <span className="px-2.5 py-1 rounded-md bg-[#FF6B35]/10 border border-[#FF6B35]/30 text-[#FF6B35] font-bold">
+                      01 // PZT-5H TRANSDUCER
+                    </span>
+                    <span className="px-2.5 py-1 rounded-md bg-white/[0.04] border border-white/10 text-slate-300">
+                      02 // 18–24 kHz CARRIER
+                    </span>
+                    <span className="px-2.5 py-1 rounded-md bg-white/[0.04] border border-white/10 text-slate-300">
+                      03 // 0% RF EMISSION
                     </span>
                   </div>
 
-                  <h1 className="font-display font-black text-3xl sm:text-5xl lg:text-7xl tracking-tight text-white leading-[1.06]">
+                  <h1 className="font-display font-black text-3xl sm:text-5xl lg:text-7xl tracking-tight text-white leading-[1.04]">
                     DATA, CARRIED <br />
                     <span style={{ color: THEME.accent }}>ON SOUND.</span>
                   </h1>
 
-                  <p className="text-sm sm:text-base md:text-lg max-w-2xl font-normal leading-relaxed text-slate-300">
-                    WAVELINK transforms standard audio speakers and microphones into air-gapped data transceivers via near-ultrasonic acoustic waves with zero RF emissions.
+                  <p className="text-sm sm:text-base md:text-lg max-w-xl font-normal leading-relaxed text-slate-300">
+                    Transforming standard audio hardware into an impervious, air-gapped cryptographic conduit via near-ultrasonic pressure waves.
                   </p>
                 </div>
 
-                <div className="flex items-center gap-4">
-                  <span className="text-[11px] sm:text-xs font-mono text-slate-400">
-                    Scroll down to explore the 3D hardware pipeline ↓
+                <div className="flex flex-wrap items-center gap-3 pt-2">
+                  <TactileButton
+                    onClick={onOpenDevKitModal}
+                    variant="primary"
+                    icon={<ArrowRightIcon size={14} color="#0E0E12" />}
+                  >
+                    REQUEST DEV KIT
+                  </TactileButton>
+
+                  <button
+                    onClick={() => {
+                      soundEngine.playThud(!isExplodedView);
+                      toggleExplodedView();
+                    }}
+                    className="px-4 py-2.5 rounded-xl border border-white/15 bg-white/[0.03] text-slate-300 font-mono text-xs hover:border-[#FF6B35]/50 hover:text-white transition-all cursor-pointer"
+                  >
+                    {isExplodedView ? 'COLLAPSE CAD' : 'EXPLODE 3D CAD'}
+                  </button>
+
+                  <span className="text-[11px] font-mono text-slate-400 ml-auto hidden sm:inline">
+                    SCROLL DOWN TO TRANSMIT ↓
                   </span>
                 </div>
               </div>
 
-              <div className="lg:col-span-4 flex flex-col gap-4 sm:gap-6 justify-between items-stretch pointer-events-auto">
-                <TelemetryPanel className="flex-1 flex flex-col justify-between gap-4 p-5 sm:p-6">
+              {/* Right Column: Van Lent Modular Telemetry Station */}
+              <div className="lg:col-span-5 flex flex-col gap-4 justify-between items-stretch pointer-events-auto">
+                <TelemetryPanel className="flex flex-col gap-4 p-5 sm:p-6">
                   <div className="flex items-center justify-between text-xs font-mono text-slate-400 border-b border-white/10 pb-3">
                     <div className="flex items-center gap-2">
                       <WaveformIcon size={18} color={THEME.accent} />
@@ -188,8 +251,19 @@ export const ScrollyOverlay: React.FC = () => {
                     </div>
                     <SpectrumBars barsCount={8} />
                   </div>
-                  <OscilloscopeStrip height={65} />
+                  <OscilloscopeStrip height={70} />
                 </TelemetryPanel>
+
+                <div className="grid grid-cols-2 gap-3 font-mono text-xs">
+                  <div className="p-4 rounded-xl bg-black/50 border border-white/10 flex flex-col gap-1">
+                    <span className="text-slate-500 text-[10px]">ACOUSTIC BAND</span>
+                    <strong className="text-white text-sm">18.0–24.0 kHz</strong>
+                  </div>
+                  <div className="p-4 rounded-xl bg-[#FF6B35]/[0.06] border border-[#FF6B35]/30 flex flex-col gap-1">
+                    <span className="text-[#FF6B35] text-[10px]">THROUGHPUT</span>
+                    <strong className="text-[#FF6B35] text-sm">16.4 kbps</strong>
+                  </div>
+                </div>
               </div>
             </motion.div>
           )}
@@ -480,17 +554,13 @@ export const ScrollyOverlay: React.FC = () => {
 
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pt-3 sm:pt-4 border-t border-white/10">
                   <span className="font-mono text-[11px] sm:text-xs text-slate-400">WAVELINK Dev Kit v2 (2x Core Modules + SDK)</span>
-                  <button
-                    className="px-5 py-2.5 sm:px-6 sm:py-3 rounded-xl font-mono text-xs font-bold flex items-center gap-2 cursor-pointer shadow-lg w-full sm:w-auto justify-center"
-                    style={{
-                      backgroundColor: THEME.accent,
-                      color: '#0E0E12',
-                      boxShadow: '0 0 25px -4px rgba(255, 107, 53, 0.5)',
-                    }}
+                  <TactileButton
+                    onClick={onOpenDevKitModal}
+                    variant="primary"
+                    icon={<ArrowRightIcon size={14} color="#0E0E12" />}
                   >
-                    <span>REQUEST DEV KIT</span>
-                    <ArrowRightIcon size={14} color="#0E0E12" />
-                  </button>
+                    REQUEST DEV KIT
+                  </TactileButton>
                 </div>
               </TelemetryPanel>
             </motion.div>
